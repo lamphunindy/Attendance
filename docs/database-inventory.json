@@ -1,0 +1,10 @@
+{
+  "migrations": 5,
+  "tables": 27,
+  "rls_tables": 27,
+  "rls_policies": 60,
+  "public_functions": 24,
+  "private_functions": 7,
+  "indexes": 129,
+  "foreign_keys": 52
+}

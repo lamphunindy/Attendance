@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Firebase Admin SDK is server-only. All application access uses the server
+    // repository, which verifies sessions, school membership and assignment scope.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

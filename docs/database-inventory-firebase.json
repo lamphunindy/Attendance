@@ -1,0 +1,42 @@
+{
+  "backend": "Cloud Firestore",
+  "authentication": "Firebase Authentication",
+  "applicationCollections": [
+    "academic_years",
+    "attendance_records",
+    "attendance_sessions",
+    "audit_logs",
+    "characteristic_results",
+    "classrooms",
+    "desirable_characteristics",
+    "enrollments",
+    "final_results",
+    "grade_levels",
+    "grading_scales",
+    "indicator_results",
+    "learning_indicators",
+    "profiles",
+    "reading_assessment_categories",
+    "reading_assessment_results",
+    "school_settings",
+    "schools",
+    "score_categories",
+    "score_items",
+    "student_scores",
+    "students",
+    "subjects",
+    "teacher_assignments",
+    "teacher_invitations",
+    "terms",
+    "user_roles"
+  ],
+  "internalCollections": [
+    "_system",
+    "_locks"
+  ],
+  "applicationCollectionCount": 27,
+  "operations": 14,
+  "clientRules": "deny all; authenticated server authorization required",
+  "indexes": "automatic single-field indexes",
+  "timestamps": "ISO 8601 UTC strings"
+}

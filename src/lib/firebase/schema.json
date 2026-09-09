@@ -1,0 +1,1484 @@
+{
+  "academic_years": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "year": {
+      "type": "integer",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "is_active": {
+      "type": "boolean",
+      "nullable": false,
+      "default": false,
+      "hasDefault": true
+    },
+    "archived_at": {
+      "type": "timestamp with time zone",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "attendance_records": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "attendance_session_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "enrollment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "status": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "note": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "updated_by": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$actor",
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "attendance_sessions": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "teacher_assignment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "attendance_date": {
+      "type": "date",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "period_number": {
+      "type": "integer",
+      "nullable": false,
+      "default": 1,
+      "hasDefault": true
+    },
+    "topic": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "hours": {
+      "type": "numeric",
+      "nullable": false,
+      "default": 1,
+      "hasDefault": true
+    },
+    "created_by": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$actor",
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "audit_logs": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "actor_user_id": {
+      "type": "uuid",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "action": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "entity_type": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "entity_id": {
+      "type": "uuid",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "before_data": {
+      "type": "jsonb",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "after_data": {
+      "type": "jsonb",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "metadata": {
+      "type": "jsonb",
+      "nullable": false,
+      "default": {},
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "characteristic_results": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "teacher_assignment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "characteristic_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "enrollment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "level": {
+      "type": "integer",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "note": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "classrooms": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "academic_year_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "grade_level_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "name": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "room_number": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "homeroom_teacher_id": {
+      "type": "uuid",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "active": {
+      "type": "boolean",
+      "nullable": false,
+      "default": true,
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "desirable_characteristics": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "code": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "name": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "sort_order": {
+      "type": "integer",
+      "nullable": false,
+      "default": 0,
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "enrollments": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "student_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "classroom_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "academic_year_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "student_number": {
+      "type": "integer",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "status": {
+      "type": "text",
+      "nullable": false,
+      "default": "active",
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "final_results": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "teacher_assignment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "enrollment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "total_score": {
+      "type": "numeric",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "grade": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "result_status": {
+      "type": "text",
+      "nullable": false,
+      "default": "normal",
+      "hasDefault": true
+    },
+    "teacher_note": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "calculated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "calculated_by": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$actor",
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "grade_levels": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "code": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "name": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "sort_order": {
+      "type": "integer",
+      "nullable": false,
+      "default": 0,
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "grading_scales": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "name": {
+      "type": "text",
+      "nullable": false,
+      "default": "เกณฑ์มาตรฐาน",
+      "hasDefault": true
+    },
+    "min_score": {
+      "type": "numeric",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "max_score": {
+      "type": "numeric",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "grade_value": {
+      "type": "numeric",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "display_grade": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "sort_order": {
+      "type": "integer",
+      "nullable": false,
+      "default": 0,
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "indicator_results": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "learning_indicator_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "enrollment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "result": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "note": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "learning_indicators": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "teacher_assignment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "code": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "description": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "sort_order": {
+      "type": "integer",
+      "nullable": false,
+      "default": 0,
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "profiles": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "full_name": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "email": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "avatar_url": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "phone": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "active": {
+      "type": "boolean",
+      "nullable": false,
+      "default": true,
+      "hasDefault": true
+    },
+    "requested_school_id": {
+      "type": "uuid",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "last_login_at": {
+      "type": "timestamp with time zone",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "reading_assessment_categories": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "name": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "sort_order": {
+      "type": "integer",
+      "nullable": false,
+      "default": 0,
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "reading_assessment_results": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "teacher_assignment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "category_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "enrollment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "level": {
+      "type": "integer",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "note": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "school_settings": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "key": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "value": {
+      "type": "jsonb",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "schools": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "name": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "code": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "logo_url": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "address": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "phone": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "director_name": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "education_area": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "score_categories": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "teacher_assignment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "name": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "max_score": {
+      "type": "numeric",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "weight": {
+      "type": "numeric",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "sort_order": {
+      "type": "integer",
+      "nullable": false,
+      "default": 0,
+      "hasDefault": true
+    },
+    "category_type": {
+      "type": "text",
+      "nullable": false,
+      "default": "custom",
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "score_items": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "score_category_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "title": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "description": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "max_score": {
+      "type": "numeric",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "due_date": {
+      "type": "date",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "sort_order": {
+      "type": "integer",
+      "nullable": false,
+      "default": 0,
+      "hasDefault": true
+    },
+    "active": {
+      "type": "boolean",
+      "nullable": false,
+      "default": true,
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "student_scores": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "score_item_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "enrollment_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "score": {
+      "type": "numeric",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "note": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "entered_by": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$actor",
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "students": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "student_code": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "national_student_id": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "prefix": {
+      "type": "text",
+      "nullable": false,
+      "default": "",
+      "hasDefault": true
+    },
+    "first_name": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "last_name": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "nickname": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "gender": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "birth_date": {
+      "type": "date",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "photo_url": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "active": {
+      "type": "boolean",
+      "nullable": false,
+      "default": true,
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "subjects": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "subject_code": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "name": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "subject_group": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "hours_per_term": {
+      "type": "numeric",
+      "nullable": false,
+      "default": 40,
+      "hasDefault": true
+    },
+    "credits": {
+      "type": "numeric",
+      "nullable": false,
+      "default": 1,
+      "hasDefault": true
+    },
+    "description": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "active": {
+      "type": "boolean",
+      "nullable": false,
+      "default": true,
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "teacher_assignments": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "teacher_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "classroom_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "subject_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "term_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "active": {
+      "type": "boolean",
+      "nullable": false,
+      "default": true,
+      "hasDefault": true
+    },
+    "workflow": {
+      "type": "result_workflow",
+      "nullable": false,
+      "default": "draft",
+      "hasDefault": true
+    },
+    "workflow_note": {
+      "type": "text",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "score_total": {
+      "type": "numeric",
+      "nullable": false,
+      "default": 100,
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "teacher_invitations": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "email": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "role": {
+      "type": "app_role",
+      "nullable": false,
+      "default": "teacher",
+      "hasDefault": true
+    },
+    "status": {
+      "type": "text",
+      "nullable": false,
+      "default": "pending",
+      "hasDefault": true
+    },
+    "invited_by": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "accepted_by": {
+      "type": "uuid",
+      "nullable": true,
+      "default": null,
+      "hasDefault": false
+    },
+    "expires_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$expiry",
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "terms": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "academic_year_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "term_number": {
+      "type": "integer",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "name": {
+      "type": "text",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "start_date": {
+      "type": "date",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "end_date": {
+      "type": "date",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "is_active": {
+      "type": "boolean",
+      "nullable": false,
+      "default": false,
+      "hasDefault": true
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  },
+  "user_roles": {
+    "id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": "$uuid",
+      "hasDefault": true
+    },
+    "user_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "school_id": {
+      "type": "uuid",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "role": {
+      "type": "app_role",
+      "nullable": false,
+      "default": null,
+      "hasDefault": false
+    },
+    "created_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    },
+    "updated_at": {
+      "type": "timestamp with time zone",
+      "nullable": false,
+      "default": "$now",
+      "hasDefault": true
+    }
+  }
+}
