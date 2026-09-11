@@ -1,0 +1,14 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Netlify automatically installs its current Next.js adapter.
+# Set Firebase credentials in the Netlify UI with Functions scope (or all scopes).
+# Variables declared here are not available to serverless functions.
+# Set in Netlify UI (all scopes), then redeploy:
+# AWS_LAMBDA_JS_RUNTIME = nodejs22.x
+# npm run build applies patches/jwks-rsa+4.1.0.patch and tests Firebase loading
+# with synchronous ESM require disabled. No experimental runtime flag is needed.

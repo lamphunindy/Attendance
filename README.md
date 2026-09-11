@@ -113,6 +113,8 @@ npm.cmd run test:e2e
 
 Frontend ใช้ Vercel ได้ตามเดิม ตั้ง environment ฝั่ง client/server ตามข้อ 1 และ 4 และตั้ง NEXT_PUBLIC_SITE_URL เป็น HTTPS ของเว็บจริง เพิ่มโดเมนใน Firebase Authorized domains จากนั้น deploy Security Rules และเว็บ
 
+สำหรับ Netlify ให้ทำตาม [คู่มือ deploy และตรวจ Internal Server Error](docs/netlify-setup.md) โดยตั้ง Firebase environment variables ให้ Functions เข้าถึงได้ด้วย
+
 ใช้ Firestore managed export/backup ไป Cloud Storage ตามแผนบริการของโครงการ และสำรอง Firebase Authentication users แยกจาก Firestore ต้องทดสอบ restore ในโครงการแยกก่อนใช้งานกับข้อมูลโรงเรียนจริง
 
 ## ข้อจำกัดที่ต้องทราบ

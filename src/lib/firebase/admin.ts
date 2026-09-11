@@ -34,13 +34,31 @@ export const adminAuth = () => getAuth(firebaseApp());
 export const firestore = () => getFirestore(firebaseApp());
 export async function loginBranding() {
   if (!isConfigured()) return null;
+  let timeout: ReturnType<typeof setTimeout> | undefined;
   try {
-    const r = await firestore().collection('schools').orderBy('created_at').limit(1).get();
+    // Branding is optional: an unavailable database must not hold up the login page.
+    // This bounds the render wait; it does not cancel the underlying Firestore read.
+    const r = await Promise.race([
+      firestore().collection('schools').orderBy('created_at').limit(1).get(),
+      new Promise<null>((resolve) => {
+        timeout = setTimeout(() => resolve(null), 2000);
+      }),
+    ]);
+    if (!r) {
+      console.warn('[firebase/login-branding] timeout');
+      return null;
+    }
     const d = r.docs[0]?.data();
     return d
       ? { name: String(d.name || ''), logo_url: typeof d.logo_url === 'string' ? d.logo_url : null }
       : null;
-  } catch {
+  } catch (error) {
+    // Log only the SDK code, never credentials or database contents.
+    const code =
+      error && typeof error === 'object' && 'code' in error ? String(error.code) : 'unknown';
+    console.warn('[firebase/login-branding] unavailable', code);
     return null;
+  } finally {
+    if (timeout !== undefined) clearTimeout(timeout);
   }
 }

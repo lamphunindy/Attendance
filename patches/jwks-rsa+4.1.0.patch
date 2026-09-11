@@ -1,0 +1,23 @@
+diff --git a/node_modules/jwks-rsa/src/utils.js b/node_modules/jwks-rsa/src/utils.js
+--- a/node_modules/jwks-rsa/src/utils.js
++++ b/node_modules/jwks-rsa/src/utils.js
+@@ -1,2 +1,1 @@
+-const jose = require('jose');
+ const JwksError = require('./errors/JwksError');
+@@ -39,2 +38,3 @@
+ async function retrieveSigningKeys(jwks) {
++  const jose = await import('jose');
+   const results = [];
+diff --git a/node_modules/jwks-rsa/src/integrations/passport.js b/node_modules/jwks-rsa/src/integrations/passport.js
+--- a/node_modules/jwks-rsa/src/integrations/passport.js
++++ b/node_modules/jwks-rsa/src/integrations/passport.js
+@@ -1,2 +1,1 @@
+-const jose = require('jose');
+ const { ArgumentError } = require('../errors');
+@@ -30,4 +29,5 @@
+-  return function secretProvider(req, rawJwtToken, cb) {
++  return async function secretProvider(req, rawJwtToken, cb) {
+     let decoded;
+     try {
++      const jose = await import('jose');
+       decoded = {
