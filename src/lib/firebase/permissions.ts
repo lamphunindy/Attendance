@@ -67,9 +67,9 @@ export class Permissions {
   async canRead(table: string, d: Doc): Promise<boolean> {
     if (table === 'profiles') {
       if (d.id === this.actor) return true;
+      if (d.requested_school_id && (await this.admin(refId(d, 'requested_school_id')))) return true;
       const theirs = await this.store.list('user_roles', { field: 'user_id', op: '==', value: d.id });
       for (const r of theirs) if (await this.admin(refId(r, 'school_id'))) return true;
-      if (d.requested_school_id && (await this.admin(refId(d, 'requested_school_id')))) return true;
       // Teachers only need the name of teachers attached to an accessible assignment.
       for (const a of await this.store.list('teacher_assignments', {
         field: 'teacher_id',
@@ -128,14 +128,16 @@ export class Permissions {
       if (own) result.set(own.id, own);
       for (const r of roles) {
         if (r.role === 'admin') {
-          for (const member of await this.store.list('user_roles', {
+          const members = await this.store.list('user_roles', {
             field: 'school_id',
             op: '==',
             value: r.school_id,
-          })) {
-            const p = await this.store.get('profiles', refId(member, 'user_id'));
+          });
+          for (const p of await this.store.getMany(
+            'profiles',
+            members.map((member) => refId(member, 'user_id')),
+          ))
             if (p) result.set(p.id, p);
-          }
           for (const p of await this.store.list('profiles', {
             field: 'requested_school_id',
             op: '==',

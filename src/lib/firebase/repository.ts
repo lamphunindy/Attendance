@@ -10,10 +10,12 @@ type ErrorResult = { code: string; message: string };
 type Result<T> =
   { data: T; error: null; count: number | null } | { data: null; error: ErrorResult; count: null };
 type Predicate = (d: Doc) => boolean;
-function compareValue(left:Json|undefined,right:string|number) {
-  if(typeof right==='number')return Number(left)-right;
-  if(typeof left==='string'&&left.includes('T')&&right.includes('T')){
-    const a=Date.parse(left),b=Date.parse(right);if(Number.isFinite(a)&&Number.isFinite(b))return a-b;
+function compareValue(left: Json | undefined, right: string | number) {
+  if (typeof right === 'number') return Number(left) - right;
+  if (typeof left === 'string' && left.includes('T') && right.includes('T')) {
+    const a = Date.parse(left),
+      b = Date.parse(right);
+    if (Number.isFinite(a) && Number.isFinite(b)) return a - b;
   }
   return String(left).localeCompare(right);
 }
@@ -115,11 +117,11 @@ export class CollectionQuery<T extends TableName> implements PromiseLike<Result<
     return this;
   }
   gte(field: string, value: string | number) {
-    this.predicates.push((d) => compareValue(d[field],value)>=0);
+    this.predicates.push((d) => compareValue(d[field], value) >= 0);
     return this;
   }
   lt(field: string, value: string | number) {
-    this.predicates.push((d) => compareValue(d[field],value)<0);
+    this.predicates.push((d) => compareValue(d[field], value) < 0);
     return this;
   }
   order(field: string, options?: { ascending?: boolean }) {
@@ -178,24 +180,11 @@ export class CollectionQuery<T extends TableName> implements PromiseLike<Result<
   private async candidates(s: Store, p: Permissions) {
     if (this.indexed) {
       const { field, values } = this.indexed;
-      const result = new Map<string, Doc>();
-      for (let i = 0; i < values.length; i += 30) {
-        const part = values.slice(i, i + 30);
-        if (field === 'id') {
-          for (const value of part) {
-            const d = await s.get(this.table, String(value));
-            if (d) result.set(d.id, d);
-          }
-        } else {
-          for (const d of await s.list(this.table, {
-            field,
-            op: part.length === 1 ? '==' : 'in',
-            value: part.length === 1 ? part[0] : part,
-          }))
-            result.set(d.id, d);
-        }
-      }
-      return [...result.values()];
+      if (field === 'id')
+        return (await s.getMany(this.table, [...new Set(values.map(String))])).filter(
+          (d): d is Doc => d !== null,
+        );
+      return s.listIn(this.table, field, values);
     }
     return p.candidates(this.table);
   }
@@ -204,9 +193,20 @@ export class CollectionQuery<T extends TableName> implements PromiseLike<Result<
       const fn = async (s: Store) => {
         const p = new Permissions(s, this.repo.actor);
         let found: Doc[] = [];
-        if (!this.mutation || this.mutation.kind === 'update')
-          for (const d of await this.candidates(s, p))
-            if (this.predicates.every((f) => f(d)) && (await p.canRead(this.table, d))) found.push(d);
+        if (!this.mutation || this.mutation.kind === 'update') {
+          const candidates = (await this.candidates(s, p)).filter((d) => this.predicates.every((f) => f(d)));
+          if (this.mutation) {
+            for (const d of candidates) if (await p.canRead(this.table, d)) found.push(d);
+          } else {
+            // Permission checks still run for every row; independent read-only
+            // checks share the request cache and no longer wait one by one.
+            for (let i = 0; i < candidates.length; i += 30) {
+              const part = candidates.slice(i, i + 30);
+              const allowed = await Promise.all(part.map((d) => p.canRead(this.table, d)));
+              found.push(...part.filter((_, index) => allowed[index]));
+            }
+          }
+        }
         if (this.mutation) {
           const { kind, values, keys } = this.mutation;
           if (kind === 'update') {

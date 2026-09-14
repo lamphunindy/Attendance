@@ -133,32 +133,34 @@ export const loadAssignment = cache(async (id: string) => {
   for (const r of second) if (r.error) throw r.error;
   const [students, items, year] = second;
   // Batch matrix queries so large classes do not produce oversized query filters.
-  const scores = await fetchBatches(
-    items.data!.map((i) => i.id),
-    (ids, from, to) =>
+  const [scores, records, indicatorResults] = await Promise.all([
+    fetchBatches(
+      items.data!.map((i) => i.id),
+      (ids, from, to) =>
+        db
+          .from('student_scores')
+          .select('score_item_id,enrollment_id,score,note')
+          .in('score_item_id', ids)
+          .order('id')
+          .range(from, to),
+    ),
+    fetchBatches(sessionIds, (ids, from, to) =>
       db
-        .from('student_scores')
-        .select('score_item_id,enrollment_id,score,note')
-        .in('score_item_id', ids)
+        .from('attendance_records')
+        .select('attendance_session_id,enrollment_id,status,note')
+        .in('attendance_session_id', ids)
         .order('id')
         .range(from, to),
-  );
-  const records = await fetchBatches(sessionIds, (ids, from, to) =>
-    db
-      .from('attendance_records')
-      .select('attendance_session_id,enrollment_id,status,note')
-      .in('attendance_session_id', ids)
-      .order('id')
-      .range(from, to),
-  );
-  const indicatorResults = await fetchBatches(indicatorIds, (ids, from, to) =>
-    db
-      .from('indicator_results')
-      .select('learning_indicator_id,enrollment_id,result,note')
-      .in('learning_indicator_id', ids)
-      .order('id')
-      .range(from, to),
-  );
+    ),
+    fetchBatches(indicatorIds, (ids, from, to) =>
+      db
+        .from('indicator_results')
+        .select('learning_indicator_id,enrollment_id,result,note')
+        .in('learning_indicator_id', ids)
+        .order('id')
+        .range(from, to),
+    ),
+  ]);
   return {
     assignment: a,
     school: school.data!,

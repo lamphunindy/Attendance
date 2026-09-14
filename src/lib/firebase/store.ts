@@ -38,6 +38,33 @@ export class Store {
       );
     return this.cache.get(key)!;
   }
+  async getMany(table: string, ids: readonly string[]): Promise<(Doc | null)[]> {
+    const missing = [...new Set(ids)].filter((id) => {
+      const key = table + '/' + id;
+      return id && !id.includes('/') && !this.pending.has(key) && !this.cache.has(key);
+    });
+    // Cache in-flight reads immediately so concurrent queries share the batch.
+    // Keep batches bounded and preserve the caller's order, including misses.
+    for (let i = 0; i < missing.length; i += 100) {
+      const part = missing.slice(i, i + 100);
+      const refs = part.map((id) => this.db.collection(table).doc(id));
+      const batch = (this.tx ? this.tx.getAll(...refs) : this.db.getAll(...refs)).then(
+        (snapshots) =>
+          new Map(
+            snapshots.map((snapshot) => [
+              snapshot.id,
+              snapshot.exists ? ({ ...snapshot.data(), id: snapshot.id } as Doc) : null,
+            ]),
+          ),
+      );
+      for (const id of part)
+        this.cache.set(
+          table + '/' + id,
+          batch.then((rows) => rows.get(id) ?? null),
+        );
+    }
+    return Promise.all(ids.map((id) => this.get(table, id)));
+  }
   async list(table: string, filter?: Filter): Promise<Doc[]> {
     let q: Query = this.db.collection(table);
     if (filter) q = q.where(filter.field, filter.op, filter.value);
@@ -47,7 +74,14 @@ export class Store {
         key,
         (async () => {
           const snap = this.tx ? await this.tx.get(q) : await q.get();
-          return snap.docs.map((d) => ({ ...d.data(), id: d.id }) as Doc);
+          return snap.docs.map((d) => {
+            const row = { ...d.data(), id: d.id } as Doc;
+            const documentKey = table + '/' + d.id;
+            // Reuse documents already fetched by a query when checking parent
+            // records and permissions later in this same Store/request.
+            if (!this.cache.has(documentKey)) this.cache.set(documentKey, Promise.resolve(row));
+            return row;
+          });
         })(),
       );
     const rows = new Map((await this.queries.get(key)!).map((d) => [d.id, d]));
@@ -58,6 +92,21 @@ export class Store {
         if (d && (!filter || matches(d, filter))) rows.set(id, d);
       }
     return [...rows.values()];
+  }
+  async listIn(table: string, field: string, values: readonly unknown[]): Promise<Doc[]> {
+    const unique = [...new Set(values)];
+    const batches: Promise<Doc[]>[] = [];
+    for (let i = 0; i < unique.length; i += 30) {
+      const part = unique.slice(i, i + 30);
+      batches.push(
+        this.list(table, {
+          field,
+          op: part.length === 1 ? '==' : 'in',
+          value: part.length === 1 ? part[0] : part,
+        }),
+      );
+    }
+    return [...new Map((await Promise.all(batches)).flat().map((d) => [d.id, d])).values()];
   }
   async require(table: string, id: string) {
     const r = await this.get(table, id);

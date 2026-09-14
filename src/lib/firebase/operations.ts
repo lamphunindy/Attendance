@@ -29,16 +29,18 @@ async function scoreData(s: Store, a: Doc) {
     op: '==',
     value: a.id,
   });
-  const items: Doc[] = [];
-  for (const c of categories)
-    items.push(
-      ...(await s.list('score_items', { field: 'score_category_id', op: '==', value: c.id })).filter(
-        (i) => i.active,
-      ),
-    );
-  const scores: Doc[] = [];
-  for (const i of items)
-    scores.push(...(await s.list('student_scores', { field: 'score_item_id', op: '==', value: i.id })));
+  const items = (
+    await s.listIn(
+      'score_items',
+      'score_category_id',
+      categories.map((c) => c.id),
+    )
+  ).filter((i) => i.active);
+  const scores = await s.listIn(
+    'student_scores',
+    'score_item_id',
+    items.map((i) => i.id),
+  );
   return { categories, items, scores };
 }
 async function calculate(s: Store, p: Permissions, a: Doc) {
@@ -246,13 +248,15 @@ export async function operation(
   );
   const school = refId(a, 'school_id');
   if (name === 'assignment_statistics') {
-    const enrolled = await roster(s, a),
-      { items, scores } = await scoreData(s, a),
-      sessions = await s.list('attendance_sessions', {
+    const [enrolled, { items, scores }, sessions] = await Promise.all([
+      roster(s, a),
+      scoreData(s, a),
+      s.list('attendance_sessions', {
         field: 'teacher_assignment_id',
         op: '==',
         value: a.id,
-      });
+      }),
+    ]);
     const today = new Intl.DateTimeFormat('en-CA', {
       timeZone: 'Asia/Bangkok',
       year: 'numeric',

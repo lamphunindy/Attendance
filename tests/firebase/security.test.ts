@@ -59,6 +59,17 @@ describe('Firestore authorization and atomic business operations', () => {
       (await teacher.from('teacher_assignments').select('id').eq('id', f.assignmentB)).data,
     ).toHaveLength(0);
   });
+  it('batched reads filter each assignment even after the shared store has cached denied documents', async () => {
+    const reader = new Repository(db, fixtureIds.teacher);
+    const ids = [f.assignmentB, f.assignment, f.assignmentB];
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const result = await reader.from('teacher_assignments').select('id').in('id', ids);
+      expect(result.error).toBeNull();
+      expect(result.data).toEqual([{ id: f.assignment }]);
+    }
+    const outsider = new Repository(db, fixtureIds.pending);
+    expect((await outsider.from('teacher_assignments').select('id').in('id', ids)).data).toEqual([]);
+  });
   it('admin cannot read or mutate another school', async () => {
     expect((await admin.from('schools').select('id').eq('id', f.school)).data).toHaveLength(1);
     expect((await admin.from('schools').select('id').eq('id', f.schoolB)).data).toHaveLength(0);

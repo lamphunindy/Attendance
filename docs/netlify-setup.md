@@ -52,6 +52,22 @@ npm run build
 
 ไฟล์ `.env.local` ในเครื่องไม่ได้ถูกส่งขึ้น Git จึงต้องตั้งค่าบน Netlify แยกต่างหาก อย่าใช้ `GOOGLE_APPLICATION_CREDENTIALS` ที่ชี้ path ในเครื่อง Windows และอย่าตั้งตัวแปร emulator บน production ตัวแปรที่เขียนใน `netlify.toml` ไม่ส่งต่อให้ Functions เมื่อแก้ environment variables แล้วต้อง deploy ใหม่ รวมถึงค่าที่ขึ้นต้น `NEXT_PUBLIC_` ซึ่งฝังตอน build
 
+## เมื่อทุกหน้าโหลดช้า
+
+ชั้นอ่าน Firestore รวมการอ่านเอกสารตาม ID เป็นกลุ่ม (ไม่เกิน 100 รายการต่อกลุ่ม) และรวม query `in` ไม่เกิน 30 ค่าต่อกลุ่ม ข้อมูลที่ได้จาก query ถูกใช้ซ้ำภายในคำขอเดียว ช่วยลดการอ่านเอกสารเดิมระหว่างตรวจสิทธิ์ ทุกแถวยังผ่านการตรวจสิทธิ์ก่อนส่งกลับ และไม่มีการเก็บข้อมูลผู้ใช้ร่วมกันข้ามคำขอ การอ่านคะแนน การเข้าเรียน และผลตัวชี้วัดที่ไม่ขึ้นต่อกันเริ่มพร้อมกัน ส่วนการเขียนยังใช้ transaction เดิม
+
+ชุดทดสอบจำลองรายชื่อนักเรียน 60 คนยืนยันว่าใช้ batch read 1 ครั้ง และไม่อ่านซ้ำเมื่อขอรายชื่อเดิมในคำขอเดียว ตัวเลขนี้เป็นจำนวนการเรียกฐานข้อมูลในชุดทดสอบ ไม่ใช่ผลวัดเวลาโหลดเว็บจริง
+
+ตรวจตำแหน่งของ Netlify Functions เทียบกับ Firestore ด้วย หากอยู่ไกลกัน การเรียกฐานข้อมูลแต่ละรอบจะมีเวลารอเพิ่ม:
+
+1. เปิด **Project configuration → Build & deploy → Continuous deployment → Functions region**
+2. หาก Firestore อยู่กรุงเทพฯ (`asia-southeast3`) แต่ Functions อยู่ Ohio (`cmh`) ให้พิจารณาเลือก **Asia Pacific (Singapore)** (`sin`) หากแพ็กเกจมีตัวเลือกนี้
+3. บันทึกแล้ว deploy ใหม่ จากนั้นเปรียบเทียบหน้าเดิมด้วยบัญชีเดิม ทั้งการเปิดครั้งแรกและการเปลี่ยนหน้า
+
+Netlify ระบุว่าการเปลี่ยน region รองรับ Pro/Enterprise และ Functions ที่สร้างโดย framework adapter ต้องตั้งผ่านหน้าโครงการ ไม่แก้ไฟล์ฟังก์ชันที่สร้างอัตโนมัติ การแสดง skeleton ช่วยให้เห็นสถานะระหว่างรอ แต่ไม่ได้ลดเวลาตอบกลับของฐานข้อมูล
+
+อ้างอิง: [Netlify Functions region](https://docs.netlify.com/build/functions/configuration/#region), [Firestore: ลด latency ด้วยตำแหน่งบริการและการอ่านแบบ asynchronous](https://firebase.google.com/docs/firestore/best-practices)
+
 ## ตรวจ Internal Server Error
 
 เปิด Function logs ของ Next.js server handler แล้วเปิด URL ที่มีปัญหาอีกครั้ง เก็บ error และ stack trace พร้อม path และเวลาที่เกิด โดยไม่ส่ง credentials หรือ session cookies:
