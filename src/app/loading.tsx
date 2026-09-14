@@ -1,1 +1,1 @@
-export { Skeleton as default } from '@/components/ui/states';
+export { AppLoading as default } from '@/components/ui/loading-screen';

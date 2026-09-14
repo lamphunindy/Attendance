@@ -631,6 +631,81 @@ tbody tr:hover td {
     background-position: -200% 0;
   }
 }
+.loading-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #4c75bc;
+  font-size: 13px;
+}
+.loading-spinner {
+  animation: loading-spin 1s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.skeleton-table-row {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) minmax(45px, 15%);
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+.side-nav a,
+.bottom-nav a,
+.tabs a {
+  position: relative;
+}
+.navigation-pending {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: #2563eb;
+  display: grid;
+  place-items: center;
+  padding: 2px;
+  border-radius: 50%;
+  background: #eff6ff;
+}
+.navigation-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 3px;
+  overflow: hidden;
+  background: #dbeafe;
+  z-index: 100;
+  pointer-events: none;
+}
+.navigation-progress > span {
+  display: block;
+  height: 100%;
+  width: 35%;
+  background: #2563eb;
+  animation: navigation-slide 1.2s ease-in-out infinite;
+}
+@keyframes navigation-slide {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(390%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .loading-spinner,
+  .navigation-progress > span {
+    animation: none;
+  }
+  .navigation-progress > span {
+    width: 100%;
+    opacity: 0.6;
+  }
+}
 .dialog-overlay {
   position: fixed;
   inset: 0;

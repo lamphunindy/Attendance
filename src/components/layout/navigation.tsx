@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { NavigationPending } from './navigation-pending';
 import {
   LayoutDashboard,
   BookOpen,
@@ -63,6 +64,7 @@ export function Navigation({ admin = false, bottom = false }: { admin?: boolean;
           <span>
             {bottom && href === '/classrooms' ? 'ห้องเรียน' : bottom && href === '/scores' ? 'คะแนน' : label}
           </span>
+          <NavigationPending />
         </Link>
       ))}
     </nav>

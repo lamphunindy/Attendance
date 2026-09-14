@@ -1,11 +1,21 @@
 import Image from 'next/image';
+import { Suspense } from 'react';
+import { AppLoading } from '@/components/ui/loading-screen';
 export const dynamic = 'force-dynamic';
 import { BookOpen, School, ChevronDown, LogOut } from 'lucide-react';
 import { requireMember } from '@/lib/auth/session';
 import { Navigation } from '@/components/layout/navigation';
 import { logout, changeSchool } from '@/app/auth/actions';
 import { Button } from '@/components/ui/button';
-export default async function WorkspaceLayout({ children }: { children: React.ReactNode }) {
+export default function WorkspaceLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<AppLoading />}>
+      <AuthenticatedWorkspace>{children}</AuthenticatedWorkspace>
+    </Suspense>
+  );
+}
+
+async function AuthenticatedWorkspace({ children }: { children: React.ReactNode }) {
   const s = await requireMember();
   const { data: school, error } = await s.db
     .from('schools')

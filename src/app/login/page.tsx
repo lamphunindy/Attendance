@@ -3,10 +3,44 @@ import { GoogleLogin } from '@/components/auth/google-login';
 import { isConfigured } from '@/lib/firebase/server';
 import Image from 'next/image';
 import { loginBranding } from '@/lib/firebase/admin';
+import { Suspense } from 'react';
+
+async function SchoolTitle({ branding }: { branding: ReturnType<typeof loginBranding> }) {
+  const school = await branding;
+  return <strong>{school?.name || 'ระบบ ปพ.5 ออนไลน์'}</strong>;
+}
+
+async function SchoolBrand({ branding }: { branding: ReturnType<typeof loginBranding> }) {
+  const school = await branding;
+  return (
+    <div className="grid gap-3">
+      <div className="brand">
+        <div className="brand-icon">
+          {school?.logo_url ? (
+            <Image
+              unoptimized
+              src={school.logo_url}
+              width={44}
+              height={44}
+              alt="โลโก้โรงเรียน"
+              className="rounded-lg bg-white object-contain"
+            />
+          ) : (
+            <BookOpen />
+          )}
+        </div>
+        <strong>ระบบ ปพ.5 ออนไลน์</strong>
+      </div>
+      {school?.name && <p className="muted">{school.name}</p>}
+    </div>
+  );
+}
 export default async function Login({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const { error } = await searchParams;
   const configured = isConfigured();
-  const branding = await loginBranding();
+  // Optional school branding streams separately so Google login is usable
+  // while Firestore is still responding. Both regions share one request.
+  const branding = loginBranding();
   return (
     <main className="login-page">
       <section className="login-story">
@@ -14,7 +48,9 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
           <div className="brand-icon">
             <BookOpen />
           </div>
-          <strong>{branding?.name || 'ระบบ ปพ.5 ออนไลน์'}</strong>
+          <Suspense fallback={<strong>ระบบ ปพ.5 ออนไลน์</strong>}>
+            <SchoolTitle branding={branding} />
+          </Suspense>
         </div>
         <div>
           <div className="eyebrow">เพื่อครู เพื่อการเรียนรู้ที่ดีกว่า</div>
@@ -36,24 +72,21 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
       </section>
       <section className="login-form">
         <div className="login-box">
-          <div className="brand">
-            <div className="brand-icon">
-              {branding?.logo_url ? (
-                <Image
-                  unoptimized
-                  src={branding.logo_url}
-                  width={44}
-                  height={44}
-                  alt="โลโก้โรงเรียน"
-                  className="rounded-lg bg-white object-contain"
-                />
-              ) : (
-                <BookOpen />
-              )}
-            </div>
-            <strong>ระบบ ปพ.5 ออนไลน์</strong>
-          </div>
-          {branding?.name && <p className="muted">{branding.name}</p>}
+          <Suspense
+            fallback={
+              <div className="grid gap-3">
+                <div className="brand">
+                  <div className="brand-icon">
+                    <BookOpen />
+                  </div>
+                  <strong>ระบบ ปพ.5 ออนไลน์</strong>
+                </div>
+                <div className="skeleton h-5 w-48 max-w-full mx-auto" aria-label="กำลังโหลดชื่อโรงเรียน" />
+              </div>
+            }
+          >
+            <SchoolBrand branding={branding} />
+          </Suspense>
           <div>
             <h2>ยินดีต้อนรับคุณครู</h2>
             <p className="muted mt-2">เข้าสู่ระบบเพื่อเริ่มดูแลห้องเรียนของคุณ</p>

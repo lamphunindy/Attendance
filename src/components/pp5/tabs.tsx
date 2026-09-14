@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { NavigationPending } from '@/components/layout/navigation-pending';
 export function PP5Tabs({ id }: { id: string }) {
   const pathname = usePathname();
   const tabs = [
@@ -26,6 +27,7 @@ export function PP5Tabs({ id }: { id: string }) {
             aria-current={pathname === href ? 'page' : undefined}
           >
             {label}
+            <NavigationPending />
           </Link>
         );
       })}
