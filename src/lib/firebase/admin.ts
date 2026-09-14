@@ -2,6 +2,7 @@ import 'server-only';
 import { applicationDefault, cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
+import { credentialValue, firebasePrivateKey } from './credentials';
 
 export function isConfigured() {
   return !!(
@@ -24,8 +25,8 @@ export function firebaseApp() {
     process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY
       ? cert({
           projectId,
-          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-          privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+          clientEmail: credentialValue(process.env.FIREBASE_CLIENT_EMAIL, 'FIREBASE_CLIENT_EMAIL'),
+          privateKey: firebasePrivateKey(process.env.FIREBASE_PRIVATE_KEY),
         })
       : applicationDefault();
   return initializeApp({ projectId, credential }, 'pp5');
@@ -54,8 +55,7 @@ export async function loginBranding() {
       : null;
   } catch (error) {
     // Log only the SDK code, never credentials or database contents.
-    const code =
-      error && typeof error === 'object' && 'code' in error ? String(error.code) : 'unknown';
+    const code = error && typeof error === 'object' && 'code' in error ? String(error.code) : 'unknown';
     console.warn('[firebase/login-branding] unavailable', code);
     return null;
   } finally {

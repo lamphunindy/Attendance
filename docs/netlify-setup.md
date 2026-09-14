@@ -48,6 +48,8 @@ npm run build
 
 คัดลอก `FIREBASE_CLIENT_EMAIL` และ `FIREBASE_PRIVATE_KEY` จาก Service account ของ project เดียวกัน โดยใส่ private key เป็น PEM ที่มีบรรทัดจริงหรือ `\n` ได้ ไม่ใส่เครื่องหมายคำพูดครอบค่าในช่อง Netlify และไม่ใส่ JSON ทั้งไฟล์ ห้ามนำ private key ไปใส่ตัวแปร `NEXT_PUBLIC_*` หรือ commit ลง Git
 
+ตัวอ่าน credentials รองรับเครื่องหมายคำพูดและรูปแบบ `FIREBASE_PRIVATE_KEY="..."` ที่อาจติดมาจากการคัดลอกด้วย โดยตัดเฉพาะส่วนครอบและแปลงบรรทัด ไม่แก้เนื้อหาคีย์ที่ขาดหรือคีย์ที่ถูกเพิกถอน หน้า login แสดงข้อความผิดพลาดค้างไว้พร้อมรหัสอ้างอิง เช่น `LOGIN-KEY`, `LOGIN-CREDENTIAL`, `LOGIN-PROFILE`, `LOGIN-SESSION` เพื่อส่งให้ผู้ดูแลได้โดยไม่ต้องเปิด Function log
+
 ไฟล์ `.env.local` ในเครื่องไม่ได้ถูกส่งขึ้น Git จึงต้องตั้งค่าบน Netlify แยกต่างหาก อย่าใช้ `GOOGLE_APPLICATION_CREDENTIALS` ที่ชี้ path ในเครื่อง Windows และอย่าตั้งตัวแปร emulator บน production ตัวแปรที่เขียนใน `netlify.toml` ไม่ส่งต่อให้ Functions เมื่อแก้ environment variables แล้วต้อง deploy ใหม่ รวมถึงค่าที่ขึ้นต้น `NEXT_PUBLIC_` ซึ่งฝังตอน build
 
 ## ตรวจ Internal Server Error
@@ -60,6 +62,7 @@ npm run build
 - `Emulators are forbidden in production`: ลบตัวแปร emulator ออกจาก production
 - `Cannot find module`, adapter หรือ proxy error: ตรวจ build log, Next.js adapter และ Node runtime ของ deployment
 - `/api/auth/session` ตอบ 403: ตรวจ `NEXT_PUBLIC_SITE_URL` ให้ตรง origin ที่ใช้เข้าเว็บ
+- `[auth/session] failed`: ส่งเฉพาะ `stage`, `code`, `reason` จาก log เพื่อแยกการตั้งค่า Firebase (`initialize-firebase`), ตรวจ Google token (`verify-token`), ลงทะเบียนใน Firestore (`register-profile`), สร้าง cookie (`create-session`) และอ่านสิทธิ์ (`read-permissions`) หาก `reason` เป็น `invalid-private-key-format` ให้ตรวจรูปแบบค่า `FIREBASE_PRIVATE_KEY` ใน Netlify โดยไม่ส่งคีย์ลงแชต
 
 การไม่มี `netlify.toml` เพียงอย่างเดียวไม่ยืนยันว่าเป็นต้นเหตุ เพราะ Netlify ตรวจ Next.js อัตโนมัติได้ ต้องใช้ log ของ deployment ที่มีปัญหาเพื่อระบุสาเหตุจริง
 
