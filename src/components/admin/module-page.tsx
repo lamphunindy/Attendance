@@ -18,7 +18,10 @@ const captions: Record<string, string> = {
 export async function ModulePage({ module, filters }: { module: string; filters: Record<string, string> }) {
   const config = modules[module];
   if (!config) notFound();
-  const { s, options } = await adminOptions(config.fields.some((field) => field.source === 'students'));
+  const sources = config.fields.flatMap((field) => (field.source ? [field.source] : []));
+  if (module === 'students') sources.push('open_classrooms');
+  if (['classrooms', 'terms', 'enrollments'].includes(module)) sources.push('academic_years');
+  const { s, options } = await adminOptions(sources);
   const page = Math.max(1, Number(filters.page) || 1);
   const columns = Array.from(new Set(['id', ...config.fields.map((f) => f.key), ...config.columns])).join(
     ',',

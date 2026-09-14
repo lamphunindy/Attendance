@@ -2,7 +2,11 @@ import 'server-only';
 import { requireAssignment, requireMember } from '@/lib/auth/session';
 import { cache } from 'react';
 import { z } from 'zod';
-export const loadAssignment = cache(async (id: string) => {
+import { measureServer } from '@/lib/server-timing';
+export const loadAssignment = cache((id: string) =>
+  measureServer('page.assignment', () => readAssignment(id)),
+);
+async function readAssignment(id: string) {
   const s = await requireAssignment(id),
     a = s.assignment,
     db = s.db;
@@ -187,7 +191,7 @@ export const loadAssignment = cache(async (id: string) => {
     readingResults: readingResults.data!,
     isAdmin: s.role.role === 'admin',
   };
-});
+}
 export type AssignmentData = Awaited<ReturnType<typeof loadAssignment>>;
 export async function fetchPages<T>(
   query: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>,
@@ -219,7 +223,9 @@ async function fetchBatches<T>(
     rows.push(...(await fetchPages((from, to) => query(ids.slice(i, i + 100), from, to))));
   return rows;
 }
-export async function loadDashboard(filters: Record<string, string | undefined> = {}) {
+export const loadDashboard = (filters: Record<string, string | undefined> = {}) =>
+  measureServer('page.dashboard', () => readDashboard(filters));
+async function readDashboard(filters: Record<string, string | undefined>) {
   const s = await requireMember(),
     db = s.db,
     sid = s.role.school_id;

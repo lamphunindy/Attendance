@@ -4,19 +4,22 @@ import { redirect, notFound } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { createClient, isConfigured, authenticatedUser } from '@/lib/firebase/server';
 import { uuid } from '@/lib/validations';
+import { measureServer } from '@/lib/server-timing';
 export const getSession = cache(async () => {
   if (!isConfigured()) redirect('/login');
   const user = await authenticatedUser();
   if (!user) redirect('/login');
   const db = await createClient();
-  const [profile, roles] = await Promise.all([
-    db
-      .from('profiles')
-      .select('id,full_name,email,avatar_url,active,requested_school_id')
-      .eq('id', user.id)
-      .single(),
-    db.from('user_roles').select('id,school_id,role').eq('user_id', user.id),
-  ]);
+  const [profile, roles] = await measureServer('auth.account', () =>
+    Promise.all([
+      db
+        .from('profiles')
+        .select('id,full_name,email,avatar_url,active,requested_school_id')
+        .eq('id', user.id)
+        .single(),
+      db.from('user_roles').select('id,school_id,role').eq('user_id', user.id),
+    ]),
+  );
   if (profile.error || roles.error) throw new Error('ไม่สามารถตรวจสอบบัญชีได้');
   const selected = (await cookies()).get('pp5_school')?.value;
   const role =

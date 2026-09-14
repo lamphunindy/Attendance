@@ -2,22 +2,35 @@ import 'server-only';
 import { requireAdmin } from '@/lib/auth/session';
 import type { Options } from '@/components/admin/record-form';
 import { allRows } from '@/lib/data';
-export async function adminOptions(includeStudents = false) {
+import { measureServer } from '@/lib/server-timing';
+export const adminOptions = (sources: readonly string[]) =>
+  measureServer('page.admin-options', () => loadAdminOptions(sources));
+async function loadAdminOptions(sources: readonly string[]) {
   const s = await requireAdmin(),
     db = s.db,
     sid = s.role.school_id;
+  const needed = new Set(sources);
+  if (needed.has('open_classrooms')) needed.add('classrooms');
+  if (needed.has('classrooms') || needed.has('terms')) needed.add('academic_years');
+  const empty: { data: never[]; error: null } = { data: [], error: null };
   const queries = await Promise.all([
-    db
-      .from('academic_years')
-      .select('id,year,archived_at')
-      .eq('school_id', sid)
-      .order('year', { ascending: false }),
-    db.from('grade_levels').select('id,name').eq('school_id', sid).order('sort_order'),
-    db.from('classrooms').select('id,name,academic_year_id,active').eq('school_id', sid),
-    db.from('subjects').select('id,name,subject_code').eq('school_id', sid),
-    db.from('profiles').select('id,full_name,active'),
-    db.from('user_roles').select('user_id').eq('school_id', sid),
-    includeStudents
+    needed.has('academic_years')
+      ? db
+          .from('academic_years')
+          .select('id,year,archived_at')
+          .eq('school_id', sid)
+          .order('year', { ascending: false })
+      : empty,
+    needed.has('grade_levels')
+      ? db.from('grade_levels').select('id,name').eq('school_id', sid).order('sort_order')
+      : empty,
+    needed.has('classrooms')
+      ? db.from('classrooms').select('id,name,academic_year_id,active').eq('school_id', sid)
+      : empty,
+    needed.has('subjects') ? db.from('subjects').select('id,name,subject_code').eq('school_id', sid) : empty,
+    needed.has('profiles') ? db.from('profiles').select('id,full_name,active') : empty,
+    needed.has('profiles') ? db.from('user_roles').select('user_id').eq('school_id', sid) : empty,
+    needed.has('students')
       ? allRows((from, to) =>
           db
             .from('students')
@@ -26,8 +39,8 @@ export async function adminOptions(includeStudents = false) {
             .order('student_code')
             .range(from, to),
         )
-      : Promise.resolve({ data: [], error: null }),
-    db.from('terms').select('id,name,academic_year_id'),
+      : empty,
+    needed.has('terms') ? db.from('terms').select('id,name,academic_year_id') : empty,
   ]);
   for (const r of queries) if (r.error) throw r.error;
   const [years, grades, classes, subjects, profiles, roles, students, terms] = queries;
